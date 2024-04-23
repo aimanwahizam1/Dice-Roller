@@ -8,6 +8,7 @@
 
 import time
 import random
+import matplotlib.pyplot as plt
 
 # ----------------------------------- Setup ---------------------------------- #
 
@@ -29,9 +30,8 @@ print("""
 time.sleep(0.9)
 print("In this version we will roll 2 d6")
 time.sleep(0.9)
-print("Let's get rolling!")
+print("Let's get rolling!\n")
 time.sleep(0.9)
-print("-------------------------------------------")
 
 # ----------------------------- Global Variables ----------------------------- #
 
@@ -50,9 +50,27 @@ roll_history = {
     12:0,
 }
 
+# ------------------------------ Graph Creation ------------------------------ #
+
+def create_graph(array, total_rolls):
+    plt.bar(array.keys(),array.values(), color = (1,0,0,0.5))
+
+    plt.xlabel("Dice Roll")
+    plt.xticks(range(2,13))
+    plt.ylabel("Frequency")
+
+    title = "Dice Roll Frequency. Total Rolls = " + str(total_rolls)
+    plt.title(title)
+
+    if max(array.values()) > 10:
+        plt.yticks(range(0, max(array.values()) + 1, 2))
+    else:
+        plt.yticks(range(0, max(array.values()) + 1))
+
 # ------------------------------ Dice Roll Logic ----------------------------- #
 
 while True:
+    print("-------------------------------------------")
     # Roll dice
     print("Rolling...")
     time.sleep(1)
@@ -60,9 +78,17 @@ while True:
     dice2 = random.randint(1,6)
     total = dice1 + dice2 
 
-    print(f'Roll #{number_of_rolls}: {dice1}, {dice2}')
+    print(f'Roll #{number_of_rolls}: {dice1}, {dice2}\n')
 
     time.sleep(1)
+
+    # Update roll history
+    roll_history[total] += 1
+
+    # Print roll frequency graph
+    create_graph(roll_history, number_of_rolls)
+    plt.show()
+
     # Ask for more rolls
     while True:
         try:
@@ -74,14 +100,19 @@ while True:
             continue
         else:
             break
-        
-    roll_history[total] += 1
-    print(roll_history)
-    
+
     if roll_again.upper() == "N":
         break
+    
+    # Update roll number
+    number_of_rolls += 1
 
+    continue
 
 time.sleep(0.3)
 print("\nThanks for rolling with us.")
+
+create_graph(roll_history, number_of_rolls)
+plt.title(f'Dice Rolls this game. Total Rolls = {number_of_rolls}')
+plt.show()
 
