@@ -55,24 +55,36 @@ def custom_dice_setup():
             print("Input a valid number of dice.")
             continue
         else:
-            print(f'Rolling with {number_of_die} dice.')
+            print(f'\nRolling with {number_of_die} dice.')
             break
 
     for i in range(1, number_of_die + 1):
         while True:
             try:
-                die_face = int(input(f'How many faces are on dice {i}?\n'))
+                die_face = int(input(f'\nHow many faces are on dice {i}?\n'))
                 if die_face <= 0:
                     raise ValueError
             except ValueError:
                 print("Input a valid dice face value.")
                 continue
             else:
-                print(f'Dice {i} is a d{die_face}.')
+                print(f'\nDice {i} is a d{die_face}.')
                 faces_array.append(die_face)
                 break
     
     return faces_array
+
+# --------------------------------- Dice Roll -------------------------------- #
+
+def roll_dice(dice_array, total_rolls):
+    for dice in dice_array:
+        rolls.append(random.randint(1, dice))
+
+    total = sum(rolls)
+
+    print(f'Roll #{total_rolls}: {str(rolls)[1:-1]}')
+
+    return total
 
 # ------------------------------ Graph Creation ------------------------------ #
 
@@ -91,6 +103,22 @@ def create_graph(rolls_array, total_rolls, dice_array):
     else:
         plt.yticks(range(0, max(rolls_array.values()) + 1))
 
+# -------------------------------- Roll Again -------------------------------- #
+
+def ask_roll_again():
+    while True:
+        try:
+            roll_again = input("\nRoll again? Y or N\n")
+            if roll_again.upper() not in ["Y", "N", "YES", "NO"]:
+                raise TypeError
+        except TypeError:
+            print("Only Y or N")
+            continue
+        else:
+            if roll_again.upper() in ["Y", "YES"]:
+                return True
+            return False  
+
 # ------------------------------------- - ------------------------------------ #
 
 if __name__ == '__main__':
@@ -101,50 +129,32 @@ if __name__ == '__main__':
     setup()
     dice_faces = custom_dice_setup()
     roll_history = create_roll_history(dice_faces)
-    print(roll_history)
-    print("Let's get rolling!\n")
+    print("\nLet's get rolling!\n")
     time.sleep(0.9)
 
     # -------------------------------- Execution --------------------------------- #
 
     while True:
         print("-------------------------------------------")
-
-        # Roll dice
         print("Rolling...")
         time.sleep(1)
 
         rolls = []
 
-        for dice in dice_faces:
-            rolls.append(random.randint(1, dice))
-
-        total = sum(rolls)
-
-        print(f'Roll #{number_of_rolls}: {str(rolls)[1:-1]}')
+        # Roll dice
+        roll_total = roll_dice(dice_faces, number_of_rolls)
 
         time.sleep(1)
 
         # Update roll history
-        roll_history[total] += 1
+        roll_history[roll_total] += 1
 
         # Print roll frequency graph
         create_graph(roll_history, number_of_rolls, dice_faces)
         plt.show()
 
         # Ask for more rolls
-        while True:
-            try:
-                roll_again = input("\nRoll again? Y or N\n")
-                if roll_again.upper() not in ["Y", "N", "YES", "NO"]:
-                    raise TypeError
-            except TypeError:
-                print("Only Y or N")
-                continue
-            else:
-                break
-
-        if roll_again.upper() == "N":
+        if not ask_roll_again():
             break
     
         # Update roll number
