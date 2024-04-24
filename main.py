@@ -165,6 +165,7 @@ if __name__ == '__main__':
     time.sleep(0.3)
     print("\nThanks for rolling with us.")
 
+    # Give final graph
     create_graph(roll_history, number_of_rolls, dice_faces)
     plt.title(f'Dice Rolls this game. Total Rolls = {number_of_rolls}')
     plt.show()
