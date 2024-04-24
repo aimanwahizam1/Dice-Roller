@@ -49,6 +49,8 @@ def custom_dice_setup():
     while True:
         try:
             number_of_die = int(input("How many dice are you rolling?\n"))
+            if number_of_die <= 0:
+                raise ValueError
         except ValueError:
             print("Input a valid number of dice.")
             continue
@@ -60,6 +62,8 @@ def custom_dice_setup():
         while True:
             try:
                 die_face = int(input(f'How many faces are on dice {i}?\n'))
+                if die_face <= 0:
+                    raise ValueError
             except ValueError:
                 print("Input a valid dice face value.")
                 continue
@@ -86,6 +90,8 @@ def create_graph(rolls_array, total_rolls, dice_array):
         plt.yticks(range(0, max(rolls_array.values()) + 1, 2))
     else:
         plt.yticks(range(0, max(rolls_array.values()) + 1))
+
+# ------------------------------------- - ------------------------------------ #
 
 if __name__ == '__main__':
     
@@ -130,7 +136,7 @@ if __name__ == '__main__':
         while True:
             try:
                 roll_again = input("\nRoll again? Y or N\n")
-                if roll_again.upper() not in ["Y", "N"]:
+                if roll_again.upper() not in ["Y", "N", "YES", "NO"]:
                     raise TypeError
             except TypeError:
                 print("Only Y or N")
@@ -152,5 +158,3 @@ if __name__ == '__main__':
     create_graph(roll_history, number_of_rolls, dice_faces)
     plt.title(f'Dice Rolls this game. Total Rolls = {number_of_rolls}')
     plt.show()
-
-
